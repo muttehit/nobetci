@@ -1,0 +1,37 @@
+services:
+  nobetci:
+    image: ghcr.io/muttehitler/nobetci:latest
+    container_name: nobetci
+    restart: always
+    env_file: .env
+    network_mode: host
+    environment:
+      - SQLALCHEMY_DATABASE_URL: "mariadb+pymysql://root:12341234@127.0.0.1/nobetci"
+    volumes:
+      - /var/lib/nobetci:/var/lib/nobetci
+    depends_on:
+      - db
+
+  nobetnode:
+    image: ghcr.io/muttehitler/nobetnode:latest
+    privileged: true
+    container_name: nobetnode
+    network_mode: host
+    env_file: nobetnode.env
+    volumes:
+      - ./:/certs/
+
+  db:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: 12341234
+      MARIADB_DATABASE: nobetci
+    volumes:
+      - /var/lib/nobetci/mysql:/var/lib/mysql
+    ports:
+      - "127.0.0.1:3306:3306"
+    healthcheck:
+      test: healthcheck.sh --connect
+      interval: 5s
+      retries: 4
