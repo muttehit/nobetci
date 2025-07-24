@@ -6,7 +6,7 @@ services:
     env_file: .env
     network_mode: host
     environment:
-      - SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/nobetci/db.sqlite3"
+      SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/nobetci/db.sqlite3"
     volumes:
       - /var/lib/nobetci:/var/lib/nobetci
 

@@ -6,7 +6,7 @@ services:
     env_file: .env
     network_mode: host
     environment:
-      - SQLALCHEMY_DATABASE_URL: "mysql+pymysql://root:12341234@127.0.0.1/nobetci"
+      SQLALCHEMY_DATABASE_URL: "mysql+pymysql://root:12341234@127.0.0.1/nobetci"
     volumes:
       - /var/lib/nobetci:/var/lib/nobetci
     depends_on:
