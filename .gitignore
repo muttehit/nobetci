@@ -1,0 +1,5 @@
+config.json
+**/__pycache__/
+.env
+venv
+nobetci.sqlite3

@@ -1,0 +1,8 @@
+config.json
+**/__pycache__/
+.env
+venv
+nodes.json
+except_user.json
+special_limit.json
+tls.json

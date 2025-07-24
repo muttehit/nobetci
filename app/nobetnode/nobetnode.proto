@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package nobetnode;
+
+service NobetService { 
+    rpc BanUser(User) returns (Result); 
+    rpc UnBanUser(User) returns (Result); 
+}
+
+message User {
+  string ip = 1;
+  uint32 banDuration = 2;
+}
+
+message Result {
+  bool success = 1;
+  string message = 2;
+}
