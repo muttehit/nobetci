@@ -17,19 +17,11 @@ SQLALCHEMY_CONNECTION_MAX_OVERFLOW = config(
     "SQLALCHEMY_CONNECTION_MAX_OVERFLOW", default=-1, cast=int
 )
 
-SERVICE_ADDRESS = config("SERVICE_ADDRESS", default="0.0.0.0")
-SERVICE_PORT = config("SERVICE_PORT", cast=int, default=53042)
-INSECURE = config("INSECURE", cast=bool, default=False)
-
 DEFAULT_LIMIT = config("DEFAULT_LIMIT", cast=int, default=1)
 
 PANEL_USERNAME = config("PANEL_USERNAME", default="")
 PANEL_PASSWORD = config("PANEL_PASSWORD", default="")
 PANEL_ADDRESS = config("PANEL_ADDRESS", default="")
-
-SSL_CERT_FILE = config("SSL_CERT_FILE", default="./ssl_cert.pem")
-SSL_KEY_FILE = config("SSL_KEY_FILE", default="./ssl_key.pem")
-SSL_CLIENT_CERT_FILE = config("SSL_CLIENT_CERT_FILE", default="")
 
 BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=10)
 STL = config("STL", cast=int, default=10)
@@ -61,13 +53,3 @@ UVICORN_SSL_KEYFILE = config("UVICORN_SSL_KEYFILE", default=None)
 
 DEBUG = config("DEBUG", cast=bool, default=False)
 DOCS = config("DOCS", cast=bool, default=False)
-
-
-class AuthAlgorithm(Enum):
-    PLAIN = "plain"
-    XXH128 = "xxh128"
-
-
-AUTH_GENERATION_ALGORITHM = config(
-    "AUTH_GENERATION_ALGORITHM", cast=AuthAlgorithm, default=AuthAlgorithm.XXH128
-)
