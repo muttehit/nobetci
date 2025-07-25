@@ -237,7 +237,7 @@ follow_nobetci_logs() {
 }
 
 nobetci_cli() {
-    $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" exec -e CLI_PROG_NAME="nobetci cli" nobetci /app/cli.py "$@"
+    $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" exec -e CLI_PROG_NAME="nobetci cli" nobetci python /app/cli.py "$@"
 }
 
 
