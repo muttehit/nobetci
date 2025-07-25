@@ -19,7 +19,7 @@ API_USERNAME=""
 API_PASSWORD=""
 
 FETCH_REPO="muttehitler/nobetci"
-SCRIPT_URL="https://github.com/$FETCH_REPO/raw/master/script.sh"
+SCRIPT_URL="https://github.com/$FETCH_REPO/raw/main/script.sh"
 
 colorized_echo() {
     local color=$1
