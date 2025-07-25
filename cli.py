@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import typer
 from typer._completion_shared import Shells
