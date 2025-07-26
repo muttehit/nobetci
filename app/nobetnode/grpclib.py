@@ -89,6 +89,7 @@ class NobetNodeGRPCLIB(NobetNodeBase):
                     except:
                         pass
                     else:
+                        self.synced = True
                         logger.info("Connected to node %i", self.id)
                         await send_notification(f"Connected to node {self.name}")
             await asyncio.sleep(10)
