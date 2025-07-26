@@ -9,4 +9,4 @@ async def nodes_startup():
     certificate = get_tls_certificate()
     db_nodes = node_db.get_all(True)
     for db_node in db_nodes:
-        await nobetnode.operations.add_node(Node(**db_node.__dict__), TLS(**certificate.__dict__))
+        await nobetnode.operations.add_node(db_node, TLS(**certificate.__dict__))

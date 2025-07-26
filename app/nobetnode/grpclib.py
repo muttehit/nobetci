@@ -5,18 +5,17 @@ import ssl
 import tempfile
 
 from app.config import BAN_INTERVAL
-from app.models.ban_user import BanUser
-from app.models.node import Node, NodeStatus
+from app.models.node import Node
 from app.models.user import User
 from app.nobetnode.nobetnode_grpc import NobetServiceStub
-from grpclib import GRPCError
 from grpclib.client import Channel
-from grpclib.exceptions import StreamTerminatedError
 from app.nobetnode.base import NobetNodeBase
+from app.notification.telegram import send_notification
 from .nobetnode_pb2 import User as PB2_User
 
 
 logger = logging.getLogger(__name__)
+
 
 def string_to_temp_file(content: str):
     file = tempfile.NamedTemporaryFile(mode="w+t")
@@ -24,16 +23,18 @@ def string_to_temp_file(content: str):
     file.flush()
     return file
 
+
 class NobetNodeGRPCLIB(NobetNodeBase):
     def __init__(
         self,
-        node:Node,
+        node: Node,
         ssl_key: str,
         ssl_cert: str,
         usage_coefficient: int = 1,
     ):
-        self.node=node
+        self.node = node
         self.id = node.id
+        self.name = node.name
         self._address = node.address
         self._port = node.port
 
@@ -54,24 +55,24 @@ class NobetNodeGRPCLIB(NobetNodeBase):
         self.synced = False
         self.usage_coefficient = usage_coefficient
         atexit.register(self._channel.close)
-        
+
     async def BanUser(self, user: User):
-        response=await self._stub.BanUser(PB2_User(
+        response = await self._stub.BanUser(PB2_User(
             ip=user.ip,
             banDuration=int(BAN_INTERVAL)
         ))
         print(response)
-        
+
         return response
-    
+
     async def UnBanUser(self, user: User):
-        response=await self._stub.UnBanUser(PB2_User(
+        response = await self._stub.UnBanUser(PB2_User(
             ip=user.ip
         ))
         print(response)
-        
+
         return response
-    
+
     async def _monitor_channel(self):
         while state := self._channel._state:
             logger.debug("node %i channel state: %s", self.id, state.value)
@@ -79,23 +80,18 @@ class NobetNodeGRPCLIB(NobetNodeBase):
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
                 logger.debug("timeout for node, id: %i", self.id)
-                # self.set_status(NodeStatus.unhealthy, "timeout")
+                await send_notification(f"timeout for node {self.name}, id: {self.id}")
                 self.synced = False
-                if self._streaming_task:
-                    self._streaming_task.cancel()
             else:
                 if not self.synced:
                     try:
-                        await self._sync()
+                        ""
                     except:
                         pass
                     else:
-                        self._streaming_task = asyncio.create_task(
-                            self._stream_user_updates()
-                        )
-                        # self.set_status(NodeStatus.healthy)
                         logger.info("Connected to node %i", self.id)
+                        await send_notification(f"Connected to node {self.name}")
             await asyncio.sleep(10)
-            
+
     def get_node(self):
         return self.node
