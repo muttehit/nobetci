@@ -2,13 +2,10 @@
 set -e
 
 APP_NAME="nobetci"
-NODE_NAME="nobetnode"
 CONFIG_DIR="/etc/opt/$APP_NAME"
 DATA_DIR="/var/lib/$APP_NAME"
-NODE_DATA_DIR="/var/lib/$NODE_NAME"
 COMPOSE_FILE="$CONFIG_DIR/docker-compose.yml"
 ENV_FILE="$CONFIG_DIR/.env"
-NOBETNODE_ENV_FILE="$CONFIG_DIR/nobetnode.env"
 PANEL_ADDRESS=""
 PANEL_USER=""
 PANEL_PASSWORD=""
@@ -159,25 +156,6 @@ install_nobetci() {
     colorized_echo green "Nöbetci files downloaded successfully"
 }
 
-install_nobetnode_env() {
-    mkdir -p "$CONFIG_DIR"
-    curl -sL "https://raw.githubusercontent.com/muttehitler/nobetnode/master/.env.example" -o "$NOBETNODE_ENV_FILE"
-
-    if grep -q "^SERVICE_ADDRESS=" "$NOBETNODE_ENV_FILE"; then
-        sed -i.bak "s|^SERVICE_ADDRESS=.*|SERVICE_ADDRESS=127.0.0.1|" "$NOBETNODE_ENV_FILE"
-    else
-        echo "SERVICE_ADDRESS=127.0.0.1" >> "$NOBETNODE_ENV_FILE"
-    fi
-
-    if grep -q "^INSECURE=" "$NOBETNODE_ENV_FILE"; then
-        sed -i.bak "s|^INSECURE=.*|INSECURE=True|" "$NOBETNODE_ENV_FILE"
-    else
-        echo "INSECURE=True" >> "$NOBETNODE_ENV_FILE"
-    fi
-
-    colorized_echo green "Sample environment downloaded for nobetnode"
-}
-
 uninstall_nobetci_script() {
     if [ -f "/usr/local/bin/nobetci" ]; then
         colorized_echo yellow "Removing nöbetci script"
@@ -211,14 +189,6 @@ uninstall_nobetci_data_files() {
         rm -r "$DATA_DIR"
     fi
 }
-
-uninstall_nobetnode_data_files() {
-    if [ -d "$NODE_DATA_DIR" ]; then
-        colorized_echo yellow "Removing directory: $NODE_DATA_DIR"
-        rm -r "$NODE_DATA_DIR"
-    fi
-}
-
 
 up_nobetci() {
     $COMPOSE -f $COMPOSE_FILE -p "$APP_NAME" up -d --remove-orphans
@@ -396,7 +366,6 @@ install_command() {
     detect_compose
     install_nobetci_script
     install_nobetci $database $nightly
-    install_nobetnode_env
 
     get_panel_address
     get_panel_user
@@ -433,7 +402,7 @@ uninstall_command() {
     uninstall_nobetci
     uninstall_nobetci_docker_images
 
-    read -p "Do you want to remove nöbetci & nobetnode data files too ($NODE_DATA_DIR, $DATA_DIR)? (y/n) "
+    read -p "Do you want to remove nöbetci data files too ($DATA_DIR)? (y/n) "
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         colorized_echo green "Nöbetci uninstalled successfully"
     else

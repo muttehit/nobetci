@@ -9,11 +9,3 @@ services:
       SQLALCHEMY_DATABASE_URL: "sqlite:////var/lib/nobetci/db.sqlite3"
     volumes:
       - /var/lib/nobetci:/var/lib/nobetci
-
-  nobetnode:
-    image: ghcr.io/muttehitler/nobetnode:latest
-    privileged: true
-    network_mode: host
-    env_file: nobetnode.env
-    volumes:
-      - ./:/certs/

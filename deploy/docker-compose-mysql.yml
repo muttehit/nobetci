@@ -12,15 +12,6 @@ services:
     depends_on:
       - db
 
-  nobetnode:
-    image: ghcr.io/muttehitler/nobetnode:latest
-    privileged: true
-    container_name: nobetnode
-    network_mode: host
-    env_file: nobetnode.env
-    volumes:
-      - ./:/certs/
-
   db:
     image: mysql:latest
     restart: always
