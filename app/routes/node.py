@@ -7,6 +7,9 @@ from jose import jwt
 from app.config import ALGORITHM, API_USERNAME, SECRET_KEY
 from app.deps import SudoAdminDep
 from app.models.node import AddNode, Node
+from app.models.tls import TLS
+from app.nobetnode import operations
+from app.utils.tls import get_tls_certificate
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
@@ -25,6 +28,25 @@ async def update_node(admin: SudoAdminDep):
     tls = tls_db.get(True)
 
     return {"success": True, "settings": {"certificate": tls.cert}}
+
+
+@router.post("")
+async def add_node(new_node: AddNode, admin: SudoAdminDep):
+    node = node_db.add({
+        "name": new_node.name,
+        "address": new_node.address,
+        "port": new_node.port,
+        "status": new_node.status,
+        "message": new_node.message
+    })
+
+    certificate = get_tls_certificate()
+
+    await operations.add_node(node, TLS(**certificate.__dict__))
+
+    logger.info("Node `%s` added with `%s` address",
+                new_node.name, new_node.address)
+    return {"success": True}
 
 
 @router.get("/{id}")
