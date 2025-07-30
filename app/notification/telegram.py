@@ -9,11 +9,12 @@ from app.config import (
 
 logger = logging.getLogger(__name__)
 
+
 async def send_message(
     message: str,
     parse_mode='HTML',
 ):
-    if not (bot := Bot(token=TELEGRAM_API_TOKEN)):
+    if not TELEGRAM_API_TOKEN or not (bot := Bot(token=TELEGRAM_API_TOKEN)):
         return
 
     for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
