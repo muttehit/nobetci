@@ -17,7 +17,7 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 
 @router.post("/login")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    if not (form_data.username == API_USERNAME and form_data.password == API_PASSWORD):
+    if not API_USERNAME or not (form_data.username == API_USERNAME and form_data.password == API_PASSWORD):
         raise HTTPException(
             status_code=401, detail="Incorrect username or password")
 
