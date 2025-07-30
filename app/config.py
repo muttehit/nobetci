@@ -28,8 +28,8 @@ STL = config("STL", cast=int, default=10)
 IUL = config("IUL", cast=int, default=50)
 BAN_LAST_USER = config("BAN_LAST_USER", cast=bool, default=False)
 
-API_USERNAME = config("API_USERNAME")
-API_PASSWORD = config("API_PASSWORD")
+API_USERNAME = config("API_USERNAME", default=None)
+API_PASSWORD = config("API_PASSWORD", default=None)
 
 SECRET_KEY = config("SECRET_KEY", default="")
 ALGORITHM = config("ALGORITHM", default="HS256")

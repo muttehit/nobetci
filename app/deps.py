@@ -11,7 +11,7 @@ from app.models.admin import oauth2_scheme
 def get_admin(token: Annotated[str, Depends(oauth2_scheme)]):
     payload = get_admin_payload(token)
 
-    if not payload:
+    if not payload or not API_USERNAME:
         return
 
     dbadmin = Admin(id=None, username=API_USERNAME, is_sudo=True)
