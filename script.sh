@@ -9,8 +9,6 @@ ENV_FILE="$CONFIG_DIR/.env"
 PANEL_ADDRESS=""
 PANEL_USER=""
 PANEL_PASSWORD=""
-BOT_TOKEN=""
-CHAT_ID=0
 SECRET_KEY=""
 API_USERNAME=""
 API_PASSWORD=""
@@ -267,56 +265,6 @@ get_panel_password(){
     fi
 }
 
-get_bot_token(){
-    read -p "Enter the bot token: " BOT_TOKEN
-
-    if grep -q "^TELEGRAM_API_TOKEN=" "$ENV_FILE"; then
-        sed -i.bak "s|^TELEGRAM_API_TOKEN=.*|TELEGRAM_API_TOKEN=$BOT_TOKEN|" "$ENV_FILE"
-    else
-        echo "TELEGRAM_API_TOKEN=$BOT_TOKEN" >> "$ENV_FILE"
-    fi
-}
-
-get_chat_id(){
-    read -p "Enter the admin chat id: " CHAT_ID
-
-    if grep -q "^TELEGRAM_ADMIN_ID=" "$ENV_FILE"; then
-        sed -i.bak "s|^TELEGRAM_ADMIN_ID=.*|TELEGRAM_ADMIN_ID=$CHAT_ID|" "$ENV_FILE"
-    else
-        echo "TELEGRAM_ADMIN_ID=$CHAT_ID" >> "$ENV_FILE"
-    fi
-}
-
-get_secret_key(){
-    read -p "Enter the api secret key(select a strong secret key): " SECRET_KEY
-
-    if grep -q "^SECRET_KEY=" "$ENV_FILE"; then
-        sed -i.bak "s|^SECRET_KEY=.*|SECRET_KEY=$SECRET_KEY|" "$ENV_FILE"
-    else
-        echo "SECRET_KEY=$SECRET_KEY" >> "$ENV_FILE"
-    fi
-}
-
-get_api_username(){
-    read -p "Enter the api username: " API_USERNAME
-
-    if grep -q "^API_USERNAME=" "$ENV_FILE"; then
-        sed -i.bak "s|^API_USERNAME=.*|API_USERNAME=$API_USERNAME|" "$ENV_FILE"
-    else
-        echo "API_USERNAME=$API_USERNAME" >> "$ENV_FILE"
-    fi
-}
-
-get_api_password(){
-    read -p "Enter the api password: " API_PASSWORD
-
-    if grep -q "^API_PASSWORD=" "$ENV_FILE"; then
-        sed -i.bak "s|^API_PASSWORD=.*|API_PASSWORD=$API_PASSWORD|" "$ENV_FILE"
-    else
-        echo "API_PASSWORD=$API_PASSWORD" >> "$ENV_FILE"
-    fi
-}
-
 install_command() {
     check_running_as_root
     # Check if nobetci is already installed
@@ -370,11 +318,6 @@ install_command() {
     get_panel_address
     get_panel_user
     get_panel_password
-    get_bot_token
-    get_chat_id
-    get_secret_key
-    get_api_username
-    get_api_password
     
     up_nobetci
     follow_nobetci_logs
