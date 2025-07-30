@@ -36,7 +36,7 @@ ALGORITHM = config("ALGORITHM", default="HS256")
 ACCESS_TOKEN_EXPIRE_MINUTES = config(
     "ACCESS_TOKEN_EXPIRE_MINUTES", cast=int, default=1440)
 
-TELEGRAM_API_TOKEN = config("TELEGRAM_API_TOKEN", default="")
+TELEGRAM_API_TOKEN = config("TELEGRAM_API_TOKEN", default=None)
 TELEGRAM_ADMIN_ID = config("TELEGRAM_ADMIN_ID", default="",
                            cast=lambda v: [
                                int(i) for i in filter(str.isdigit, (s.strip() for s in v.split(",")))
