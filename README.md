@@ -20,6 +20,10 @@
 
 Nöbetci checks the IPs of all marznode, and if an user IPs exceed the limit, first or last of this IPs is banned across all nodes.
 
+### Installation
+
+To install Nöbetci, see installation guide on [doc](https://muttehitler.github.io/nobetci-docs/docs/get-start/nobetci-installation/)
+
 ### Docs
 
 Nöbetci have a documentation on [here](https://muttehitler.github.io/nobetci-docs).
