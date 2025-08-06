@@ -7,7 +7,7 @@ from app.db.models import UserLimit
 from app.storage.memory import MemoryStorage
 
 
-__version__ = "0.0.1"
+__version__ = "0.0.9"
 
 storage = MemoryStorage()
 user_limit_db = DbContext(UserLimit)
