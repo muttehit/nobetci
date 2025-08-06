@@ -17,6 +17,8 @@ async def send_message(
     if not TELEGRAM_API_TOKEN or not (bot := Bot(token=TELEGRAM_API_TOKEN)):
         return
 
+    message+='\n➖➖➖➖➖➖➖➖\nمحل تبلیغ شما'
+
     for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
         TELEGRAM_LOGGER_CHANNEL_ID
     ]:
