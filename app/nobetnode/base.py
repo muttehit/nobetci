@@ -8,3 +8,7 @@ class NobetNodeBase(ABC):
     @abstractmethod
     async def BanUser(self, user: User):
         pass
+
+    @abstractmethod
+    async def UnBanUser(self, user: User):
+        pass

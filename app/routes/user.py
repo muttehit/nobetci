@@ -6,7 +6,8 @@ from app import user_limit_db
 
 from app.db import models
 from app.deps import SudoAdminDep
-from app.models.user import AddUser, UpdateUser
+from app.models.user import AddUser, UpdateUser, User
+from app.nobetnode import nodes
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 
@@ -54,4 +55,14 @@ async def add_user(username: str, update_user: UpdateUser, admin: SudoAdminDep):
 
     logger.info("User `%s` updated with `%i` limit",
                 username, update_user.limit)
+    return {"success": True}
+
+
+@router.post("/{username}/unban/{ip}")
+async def unbanByIp(username: str, ip: str, admin: SudoAdminDep):
+    for node in nodes.keys():
+        try:
+            await nodes[node].UnBanUser(User(name=username, status=None, ip=ip, count=0))
+        except Exception as err:
+            logger.error(f'error (node: {node}): ', err)
     return {"success": True}
