@@ -17,6 +17,7 @@ FLAGS: Dict[str, tuple] = {
     "id": ("--id", "-i"),
     "host": ("--host", "-a"),
     "port": ("--port", "-p"),
+    "ip": ("--ip", "-v"),
 
     "username": ("--username", "-u"),
     "offset": ("--offset", "-o"),
