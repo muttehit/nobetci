@@ -43,6 +43,8 @@ def list_users(
 @app.command(name="add")
 def add(name: str = typer.Option(None, *utils.FLAGS["name"], prompt=True),
         limit: int = typer.Option(None, *utils.FLAGS["limit"], prompt=True)):
+    if user_limit_db.get(UserLimit.name == name):
+        utils.error(f'User {name} exists.')
     user_limit_db.add({"name": name, "limit": limit})
     utils.success(f'{name}\'s limit successfully set to "{limit}".')
 
@@ -56,6 +58,8 @@ def delete(name: str = typer.Option(None, *utils.FLAGS["name"], prompt=True)):
 @app.command(name="update")
 def update(name: str = typer.Option(None, *utils.FLAGS["name"], prompt=True),
            limit: int = typer.Option(None, *utils.FLAGS["limit"], prompt=True)):
+    if not user_limit_db.get(UserLimit.name == name):
+        utils.error(f'User {name} isn\'t exists.')
     user_limit_db.update(UserLimit.name == name, {"limit": limit})
     utils.success(f'{name}\'s limit successfully set to "{limit}".')
 
