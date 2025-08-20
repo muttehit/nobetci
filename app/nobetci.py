@@ -12,6 +12,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.models.panel import Panel
 from app.service.check_service import CheckService
 from app.service.marznode_service import MarzNodeService
+from app.telegram_bot import build_telegram_bot
 from app.utils.panel import get_marznodes
 
 from . import __version__, user_limit_db, storage
@@ -29,6 +30,8 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
+    asyncio.create_task(build_telegram_bot())
+
     paneltype = Panel(
         username=PANEL_USERNAME,
         password=PANEL_PASSWORD,
