@@ -11,11 +11,13 @@ from telegram.ext import (
 )
 from app.config import TELEGRAM_API_TOKEN
 from app import user_limit_db
+from app.db.models import UserLimit
 
 (
-    GET_USER_NAME,
-    GET_USER_LIMIT
-) = range(2)
+    ADD_USER_NAME,
+    ADD_USER_LIMIT,
+    GET_USER_NAME
+) = range(3)
 
 
 async def build_telegram_bot():
@@ -27,12 +29,24 @@ async def build_telegram_bot():
         ConversationHandler(
             entry_points=[CommandHandler("add_user", add_user)],
             states={
-                GET_USER_NAME: [MessageHandler(filters.TEXT, get_user_name)],
-                GET_USER_LIMIT: [MessageHandler(filters.TEXT, get_user_limit)]
+                ADD_USER_NAME: [MessageHandler(filters.TEXT, add_user_name)],
+                ADD_USER_LIMIT: [MessageHandler(filters.TEXT, add_user_limit)]
             },
             fallbacks=[],
         )
     )
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[CommandHandler("get_user", get_user)],
+            states={
+                GET_USER_NAME: [MessageHandler(filters.TEXT, get_user_name)]
+            },
+            fallbacks=[],
+        )
+    )
+
+    application.add_handler(MessageHandler(filters.TEXT, start))
+    application.add_handler(MessageHandler(filters.COMMAND, start))
 
     while True:
         try:
@@ -49,7 +63,7 @@ async def start(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(text=START_MESSAGE)
 
 
-async def add_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
+async def get_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(
         text="Send Your User Name:"
     )
@@ -58,17 +72,37 @@ async def add_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
 
 async def get_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["name"] = update.message.text.strip()
+
+    user = user_limit_db.get(UserLimit.name == context.user_data["name"])
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"User {user.name} limit is {user.limit}",
+    )
+    return ConversationHandler.END
+
+
+async def add_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_html(
+        text="Send Your User Name:"
+    )
+    return ADD_USER_NAME
+
+
+async def add_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    context.user_data["name"] = update.message.text.strip()
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text="Send Your User Limit: (For example: 1)",
     )
-    return GET_USER_LIMIT
+    return ADD_USER_LIMIT
 
 
-async def get_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+async def add_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["limit"] = update.message.text.strip()
 
-    user_limit_db.add({"name": context.user_data["name"], "limit": context.user_data["limit"]})
+    user_limit_db.add(
+        {"name": context.user_data["name"], "limit": context.user_data["limit"]})
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
