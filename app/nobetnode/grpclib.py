@@ -61,7 +61,7 @@ class NobetNodeGRPCLIB(NobetNodeBase):
             ip=user.ip,
             banDuration=int(BAN_INTERVAL)
         ))
-        print(response)
+        logger.info(response)
 
         return response
 
@@ -69,7 +69,7 @@ class NobetNodeGRPCLIB(NobetNodeBase):
         response = await self._stub.UnBanUser(PB2_User(
             ip=user.ip
         ))
-        print(response)
+        logger.info(response)
 
         return response
 
