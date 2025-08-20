@@ -18,8 +18,9 @@ from app.db.models import UserLimit
     ADD_USER_LIMIT,
     GET_USER_NAME,
     UPDATE_USER_NAME,
-    UPDATE_USER_LIMIT
-) = range(5)
+    UPDATE_USER_LIMIT,
+    DELETE_USER_NAME
+) = range(6)
 
 
 async def build_telegram_bot():
@@ -53,6 +54,16 @@ async def build_telegram_bot():
                 UPDATE_USER_NAME: [MessageHandler(filters.TEXT, update_user_name)],
                 UPDATE_USER_LIMIT: [MessageHandler(
                     filters.TEXT, update_user_limit)]
+            },
+            fallbacks=[],
+        )
+    )
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[CommandHandler("delete_user", delete_user)],
+            states={
+                DELETE_USER_NAME: [MessageHandler(
+                    filters.TEXT, delete_user_name)]
             },
             fallbacks=[],
         )
@@ -122,7 +133,7 @@ async def add_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 async def add_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["limit"] = update.message.text.strip()
 
-    user_limit_db.update(
+    user_limit_db.add(
         {"name": context.user_data["name"], "limit": context.user_data["limit"]})
 
     await context.bot.send_message(
@@ -160,11 +171,37 @@ async def update_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     context.user_data["limit"] = update.message.text.strip()
 
     user_limit_db.update(UserLimit.name == context.user_data["name"], {
-                      "limit": context.user_data["limit"]})
+        "limit": context.user_data["limit"]})
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"User {context.user_data["name"]} updated with limit {context.user_data["limit"]}"
+    )
+    return ConversationHandler.END
+
+
+async def delete_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_html(
+        text="Send Your User Name:"
+    )
+    return DELETE_USER_NAME
+
+
+async def delete_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    context.user_data["name"] = update.message.text.strip()
+
+    if not user_limit_db.get(UserLimit.name == context.user_data["name"]):
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="User Isn't Exists"
+        )
+        return ConversationHandler.END
+
+    user_limit_db.delete(UserLimit.name == context.user_data["name"])
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"User {context.user_data["name"]} deleted",
     )
     return ConversationHandler.END
 
