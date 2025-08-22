@@ -206,6 +206,15 @@ async def delete_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     return ConversationHandler.END
 
 START_MESSAGE = """
-<b>Commands List:</b>\n
+<b>Commands List:</b>
 <b>/start</b>
+<code>start the bot</code>
+<b>/get_user</b>
+<code>Get User Limit</code>
+<b>/add_user</b>
+<code>Add User</code>
+<b>/update_user</b>
+<code>Update User</code>
+<b>/delete_user</b>
+<code>Delete User</code>
 """
