@@ -57,7 +57,7 @@ async def get_marznodes(panel_data: Panel) -> list[MarzNode] | ValueError:
         }
         all_nodes = []
         for scheme in ["https","http"]:
-            url = f"{scheme}://{panel_data.domain}/api/nodes"
+            url = f"{scheme}://{panel_data.domain}/api/nodes?status=healthy"
             try:
                 async with httpx.AsyncClient(verify=False) as client:
                     response = await client.get(url, headers=headers, timeout=10)
