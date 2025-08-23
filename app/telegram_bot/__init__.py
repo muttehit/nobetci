@@ -35,7 +35,7 @@ async def build_telegram_bot():
                 ADD_USER_NAME: [MessageHandler(filters.TEXT, add_user_name)],
                 ADD_USER_LIMIT: [MessageHandler(filters.TEXT, add_user_limit)]
             },
-            fallbacks=[],
+            fallbacks=[CommandHandler("cancel", start)],
         )
     )
     application.add_handler(
@@ -44,7 +44,7 @@ async def build_telegram_bot():
             states={
                 GET_USER_NAME: [MessageHandler(filters.TEXT, get_user_name)]
             },
-            fallbacks=[],
+            fallbacks=[CommandHandler("cancel", start)],
         )
     )
     application.add_handler(
@@ -55,7 +55,7 @@ async def build_telegram_bot():
                 UPDATE_USER_LIMIT: [MessageHandler(
                     filters.TEXT, update_user_limit)]
             },
-            fallbacks=[],
+            fallbacks=[CommandHandler("cancel", start)],
         )
     )
     application.add_handler(
@@ -65,7 +65,7 @@ async def build_telegram_bot():
                 DELETE_USER_NAME: [MessageHandler(
                     filters.TEXT, delete_user_name)]
             },
-            fallbacks=[],
+            fallbacks=[CommandHandler("cancel", start)],
         )
     )
 
@@ -98,6 +98,13 @@ async def get_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     context.user_data["name"] = update.message.text.strip()
 
     user = user_limit_db.get(UserLimit.name == context.user_data["name"])
+
+    if not user:
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="User Isn't Exists"
+        )
+        return ConversationHandler.END
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
