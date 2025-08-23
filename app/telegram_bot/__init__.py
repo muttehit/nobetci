@@ -138,7 +138,14 @@ async def add_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
 
 
 async def add_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    context.user_data["limit"] = update.message.text.strip()
+    try:
+        context.user_data["limit"] = int(update.message.text.strip())
+    except ValueError:
+        await update.message.reply_html(
+            text=f"Wrong input: <code>{update.message.text.strip()}"
+            + "</code>\ntry again <b>/update_user</b>"
+        )
+        return ConversationHandler.END
 
     user_limit_db.add(
         {"name": context.user_data["name"], "limit": context.user_data["limit"]})
@@ -175,7 +182,14 @@ async def update_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
 
 async def update_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    context.user_data["limit"] = update.message.text.strip()
+    try:
+        context.user_data["limit"] = int(update.message.text.strip())
+    except ValueError:
+        await update.message.reply_html(
+            text=f"Wrong input: <code>{update.message.text.strip()}"
+            + "</code>\ntry again <b>/update_user</b>"
+        )
+        return ConversationHandler.END
 
     user_limit_db.update(UserLimit.name == context.user_data["name"], {
         "limit": context.user_data["limit"]})
