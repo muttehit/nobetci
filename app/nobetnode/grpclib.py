@@ -81,7 +81,7 @@ class NobetNodeGRPCLIB(NobetNodeBase):
             try:
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
-                node_db.update({DbNode.id == self.id}, {
+                node_db.update(DbNode.id == self.id, {
                                "status": NodeStatus.unhealthy})
                 logger.debug("timeout for node, id: %i", self.id)
                 await send_notification(f"timeout for node {self.name}, id: {self.id}")
@@ -94,7 +94,7 @@ class NobetNodeGRPCLIB(NobetNodeBase):
                         pass
                     else:
                         self.synced = True
-                        node_db.update({DbNode.id == self.id}, {
+                        node_db.update(DbNode.id == self.id, {
                             "status": NodeStatus.healthy})
                         logger.info("Connected to node %i", self.id)
                         await send_notification(f"Connected to node {self.name}")
