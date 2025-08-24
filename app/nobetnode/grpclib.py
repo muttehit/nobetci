@@ -5,13 +5,15 @@ import ssl
 import tempfile
 
 from app.config import BAN_INTERVAL
-from app.models.node import Node
+from app.models.node import Node, NodeStatus
 from app.models.user import User
 from app.nobetnode.nobetnode_grpc import NobetServiceStub
 from grpclib.client import Channel
 from app.nobetnode.base import NobetNodeBase
 from app.notification.telegram import send_notification
 from .nobetnode_pb2 import User as PB2_User
+from app.db import node_db
+from app.db.models import Node as DbNode
 
 
 logger = logging.getLogger(__name__)
@@ -79,6 +81,8 @@ class NobetNodeGRPCLIB(NobetNodeBase):
             try:
                 await asyncio.wait_for(self._channel.__connect__(), timeout=2)
             except Exception:
+                node_db.update({DbNode.id == self.id}, {
+                               "status": NodeStatus.unhealthy})
                 logger.debug("timeout for node, id: %i", self.id)
                 await send_notification(f"timeout for node {self.name}, id: {self.id}")
                 self.synced = False
@@ -90,6 +94,8 @@ class NobetNodeGRPCLIB(NobetNodeBase):
                         pass
                     else:
                         self.synced = True
+                        node_db.update({DbNode.id == self.id}, {
+                            "status": NodeStatus.healthy})
                         logger.info("Connected to node %i", self.id)
                         await send_notification(f"Connected to node {self.name}")
             await asyncio.sleep(10)
