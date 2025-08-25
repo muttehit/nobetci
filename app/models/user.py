@@ -22,6 +22,7 @@ class User(BaseModel):
     status: UserStatus | None = None
     inbound: str | None = None
     accepted: str | None = None
+    node: str | None = None
     ip: str
     count: int
 

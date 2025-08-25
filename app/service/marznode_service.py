@@ -3,6 +3,7 @@ import ssl
 from ssl import SSLError
 from app.models.marznode import MarzNode
 from app.models.panel import Panel
+from app.models.user import User
 from app.notification.telegram import send_notification
 from app.service.check_service import CheckService
 from app.utils.panel import get_token
@@ -48,6 +49,7 @@ class MarzNodeService:
                             log = await ws.recv()
                             log = parse_log_to_user(log)
                             if log:
+                                log.node = node.name
                                 asyncio.create_task(
                                     self._check_service.check(log))
                 except SSLError:

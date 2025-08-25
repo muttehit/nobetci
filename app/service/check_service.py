@@ -66,9 +66,10 @@ class CheckService:
 
             self._storage.delete_user(userByEmail.name, userByEmail.ip)
 
-            log_message = 'banned user ' + userByEmail.name+" with ip " + userByEmail.ip+ "\ninbound: "+userByEmail.inbound
+            log_message = 'banned user ' + userByEmail.name+" with ip " + userByEmail.ip + \
+                '\nnode: '+userByEmail.node + "\ninbound: "+userByEmail.inbound
             if ACCEPTED:
-                log_message+='\naccepted: '+userByEmail.accepted
+                log_message += '\naccepted: '+userByEmail.accepted
             logger.info(log_message)
             await send_notification(log_message)
 
