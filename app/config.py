@@ -43,6 +43,7 @@ TELEGRAM_ADMIN_ID = config("TELEGRAM_ADMIN_ID", default="",
                            ],)
 TELEGRAM_LOGGER_CHANNEL_ID = config(
     "TELEGRAM_LOGGER_CHANNEL_ID", cast=int, default=0)
+TELEGRAM_LOGS = config("TELEGRAM_LOGS", cast=bool, default=True)
 
 
 UVICORN_HOST = config("UVICORN_HOST", default="0.0.0.0")
