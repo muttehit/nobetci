@@ -5,6 +5,7 @@ from app.config import (
     TELEGRAM_API_TOKEN,
     TELEGRAM_ADMIN_ID,
     TELEGRAM_LOGGER_CHANNEL_ID,
+    TELEGRAM_LOGS,
 )
 
 logger = logging.getLogger(__name__)
@@ -14,10 +15,10 @@ async def send_message(
     message: str,
     parse_mode='HTML',
 ):
-    if not TELEGRAM_API_TOKEN or not (bot := Bot(token=TELEGRAM_API_TOKEN)):
+    if not TELEGRAM_LOGS or not TELEGRAM_API_TOKEN or not (bot := Bot(token=TELEGRAM_API_TOKEN)):
         return
 
-    message+='\n➖➖➖➖➖➖➖➖\nمحل تبلیغ شما'
+    message += '\n➖➖➖➖➖➖➖➖\nمحل تبلیغ شما'
 
     for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
         TELEGRAM_LOGGER_CHANNEL_ID
