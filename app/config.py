@@ -18,6 +18,7 @@ SQLALCHEMY_CONNECTION_MAX_OVERFLOW = config(
 )
 
 DEFAULT_LIMIT = config("DEFAULT_LIMIT", cast=int, default=0)
+ACCEPTED = config("ACCEPTED", cast=bool, default=False)
 
 PANEL_USERNAME = config("PANEL_USERNAME", default="")
 PANEL_PASSWORD = config("PANEL_PASSWORD", default="")

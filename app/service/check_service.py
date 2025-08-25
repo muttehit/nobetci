@@ -1,5 +1,5 @@
 import logging
-from app.config import BAN_LAST_USER, DEFAULT_LIMIT, IUL, STL
+from app.config import ACCEPTED, BAN_LAST_USER, DEFAULT_LIMIT, IUL, STL
 from app.db.models import UserLimit
 from app.models.user import User
 from app.nobetnode import nodes
@@ -66,7 +66,9 @@ class CheckService:
 
             self._storage.delete_user(userByEmail.name, userByEmail.ip)
 
-            log_message = 'banned user ' + userByEmail.name+" with ip " + userByEmail.ip
+            log_message = 'banned user ' + userByEmail.name+" with ip " + userByEmail.ip+ "\ninbound: "+userByEmail.inbound
+            if ACCEPTED:
+                log_message+='\naccepted: '+userByEmail.accepted
             logger.info(log_message)
             await send_notification(log_message)
 
