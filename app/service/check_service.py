@@ -1,9 +1,11 @@
 import logging
+
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from app.config import ACCEPTED, BAN_LAST_USER, DEFAULT_LIMIT, IUL, STL
 from app.db.models import UserLimit
 from app.models.user import User
 from app.nobetnode import nodes
-from app.notification.telegram import send_notification
+from app.notification.telegram import send_notification_with_reply_markup
 from app.storage.base import BaseStorage
 from app.db.db_base import DBBase
 
@@ -40,13 +42,16 @@ class CheckService:
 
             self.repeated_out_of_limits.append(user)
 
-            rl_lenth = len(list(filter(lambda x: x.name == userByEmail.name and x.ip ==
-                           userByEmail.ip, self.repeated_out_of_limits)))
-            rl_last_lenth = len(list(filter(
+            rl_len = len(list(filter(lambda x: x.name == userByEmail.name and x.ip ==
+                                     userByEmail.ip, self.repeated_out_of_limits)))
+            rl_last_len = len(list(filter(
                 lambda x: x.name == userLast.name and x.ip == userLast.ip, self.repeated_out_of_limits)))
 
-            if rl_lenth < STL or rl_last_lenth < STL:
-                if abs(rl_lenth-rl_last_lenth) > IUL:
+            logger.debug(f"rl length: {rl_len}")
+            logger.debug(f"rl last length: {rl_last_len}")
+
+            if rl_len < STL or rl_last_len < STL:
+                if abs(rl_len-rl_last_len) > IUL:
                     self.repeated_out_of_limits = [
                         r for r in self.repeated_out_of_limits if r.name != userByEmail.name and r.ip != userByEmail.ip]
                     self.repeated_out_of_limits = [
@@ -71,7 +76,7 @@ class CheckService:
             if ACCEPTED:
                 log_message += '\naccepted: '+userByEmail.accepted
             logger.info(log_message)
-            await send_notification(log_message)
+            await send_notification_with_reply_markup(log_message, InlineKeyboardMarkup([[InlineKeyboardButton("Unban IP", callback_data=userByEmail.ip)]]))
 
     async def ban_user(self, user: User):
         for node in nodes.keys():
