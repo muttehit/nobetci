@@ -100,9 +100,9 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ip = ipaddress.ip_address(data)
         for node in nodes.keys():
             try:
-                await nodes[node].UnBanUser(User(name="", status=None, ip=ip, count=0))
+                await nodes[node].UnBanUser(User(name="", status=None, ip=data, count=0))
             except Exception as err:
-                await context.bot.send_message(chat_id=update.effective_chat.id, text=f'error (node: {node}): ')
+                await context.bot.send_message(chat_id=update.effective_chat.id, text=f'error (node: {node}): {err}')
         msg = f"✅ {data} unbanned successfully"
     except ValueError:
         msg = f"❌ {data} is not a valid IP address"
