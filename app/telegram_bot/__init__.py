@@ -1,5 +1,6 @@
 
 import asyncio
+import ipaddress
 from telegram import Update
 from telegram.ext import (
     ApplicationBuilder,
@@ -8,10 +9,14 @@ from telegram.ext import (
     ConversationHandler,
     MessageHandler,
     filters,
+    CallbackQueryHandler
 )
 from app.config import TELEGRAM_API_TOKEN
 from app import user_limit_db
 from app.db.models import UserLimit
+from app.models.user import User
+from app.nobetnode import nodes
+from app.utils.telegram import restricted
 
 (
     ADD_USER_NAME,
@@ -72,6 +77,8 @@ async def build_telegram_bot():
     application.add_handler(MessageHandler(filters.TEXT, start))
     application.add_handler(MessageHandler(filters.COMMAND, start))
 
+    application.add_handler(CallbackQueryHandler(button_handler))
+
     while True:
         try:
             async with application:
@@ -83,10 +90,32 @@ async def build_telegram_bot():
             continue
 
 
+async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    query = update.callback_query
+    await query.answer()  # Acknowledge click
+
+    data = query.data.strip()
+
+    try:
+        ip = ipaddress.ip_address(data)
+        for node in nodes.keys():
+            try:
+                await nodes[node].UnBanUser(User(name="", status=None, ip=data, count=0))
+            except Exception as err:
+                await context.bot.send_message(chat_id=update.effective_chat.id, text=f'error (node: {node}): {err}')
+        msg = f"✅ {data} unbanned successfully"
+    except ValueError:
+        msg = f"❌ {data} is not a valid IP address"
+
+    await query.edit_message_text(msg)
+
+
+@restricted
 async def start(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(text=START_MESSAGE)
 
 
+@restricted
 async def get_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(
         text="Send Your User Name:"
@@ -94,6 +123,7 @@ async def get_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     return GET_USER_NAME
 
 
+@restricted
 async def get_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["name"] = update.message.text.strip()
 
@@ -113,6 +143,7 @@ async def get_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     return ConversationHandler.END
 
 
+@restricted
 async def add_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(
         text="Send Your User Name:"
@@ -120,6 +151,7 @@ async def add_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     return ADD_USER_NAME
 
 
+@restricted
 async def add_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["name"] = update.message.text.strip()
 
@@ -137,6 +169,7 @@ async def add_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> i
     return ADD_USER_LIMIT
 
 
+@restricted
 async def add_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     try:
         context.user_data["limit"] = int(update.message.text.strip())
@@ -157,6 +190,7 @@ async def add_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     return ConversationHandler.END
 
 
+@restricted
 async def update_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(
         text="Send Your User Name:"
@@ -164,6 +198,7 @@ async def update_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     return UPDATE_USER_NAME
 
 
+@restricted
 async def update_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["name"] = update.message.text.strip()
 
@@ -181,6 +216,7 @@ async def update_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     return UPDATE_USER_LIMIT
 
 
+@restricted
 async def update_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     try:
         context.user_data["limit"] = int(update.message.text.strip())
@@ -201,6 +237,7 @@ async def update_user_limit(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     return ConversationHandler.END
 
 
+@restricted
 async def delete_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_html(
         text="Send Your User Name:"
@@ -208,6 +245,7 @@ async def delete_user(update: Update, _context: ContextTypes.DEFAULT_TYPE):
     return DELETE_USER_NAME
 
 
+@restricted
 async def delete_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
     context.user_data["name"] = update.message.text.strip()
 

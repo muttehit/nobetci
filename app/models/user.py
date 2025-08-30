@@ -20,6 +20,9 @@ class UserStatus(Enum):
 class User(BaseModel):
     name: str
     status: UserStatus | None = None
+    inbound: str | None = None
+    accepted: str | None = None
+    node: str | None = None
     ip: str
     count: int
 
@@ -27,6 +30,7 @@ class User(BaseModel):
 class AddUser(BaseModel):
     name: str
     limit: int
+
 
 class UpdateUser(BaseModel):
     limit: int
