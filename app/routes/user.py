@@ -22,7 +22,8 @@ async def get(admin: SudoAdminDep):
 
 @router.get("/{username}")
 async def get_by_username(username: str, admin: SudoAdminDep):
-    return {"success": True, "user": user_limit_db.get(models.UserLimit.name == username)}
+    user = user_limit_db.get(models.UserLimit.name == username)
+    return {"success": user != None, "user": user}
 
 
 @router.delete("/{username}")
