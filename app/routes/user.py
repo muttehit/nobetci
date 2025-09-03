@@ -17,13 +17,13 @@ router = APIRouter(prefix="/users", tags=["User"])
 
 @router.get("")
 async def get(admin: SudoAdminDep):
-    return {"success": True, "user": user_limit_db.get_all(True)}
+    return {"success": True, "data": user_limit_db.get_all(True)}
 
 
 @router.get("/{username}")
 async def get_by_username(username: str, admin: SudoAdminDep):
     user = user_limit_db.get(models.UserLimit.name == username)
-    return {"success": user != None, "user": user}
+    return {"success": user != None, "data": user}
 
 
 @router.delete("/{username}")
