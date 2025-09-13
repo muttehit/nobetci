@@ -9,6 +9,7 @@ from .db_base import DBBase
 
 tls_db: DBBase = DbContext(models.TLS)
 node_db: DBBase = DbContext(models.Node)
+excepted_ips: DBBase = DbContext(models.ExceptedIP)
 
 
 class GetDB:  # Context Manager

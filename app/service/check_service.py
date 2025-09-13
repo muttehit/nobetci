@@ -2,9 +2,10 @@ import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from app.config import ACCEPTED, BAN_LAST_USER, DEFAULT_LIMIT, IUL, STL
-from app.db.models import UserLimit
+from app.db.models import ExceptedIP, UserLimit
 from app.models.user import User
 from app.nobetnode import nodes
+from app.db import excepted_ips
 from app.notification.telegram import send_notification_with_reply_markup
 from app.storage.base import BaseStorage
 from app.db.db_base import DBBase
@@ -65,7 +66,10 @@ class CheckService:
 
             self._in_process_ips.append(userByEmail.ip)
 
-            await self.ban_user(userLast if BAN_LAST_USER else userByEmail)
+            user_to_ban = userLast if BAN_LAST_USER else userByEmail
+            if excepted_ips.get(ExceptedIP.ip == user_to_ban.ip):
+                return
+            await self.ban_user(user_to_ban)
 
             self._in_process_ips.remove(userByEmail.ip)
 

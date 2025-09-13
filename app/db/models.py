@@ -26,3 +26,9 @@ class TLS(Base):
     id = Column(Integer, primary_key=True)
     cert = Column(String(4096), nullable=False)
     key = Column(String(4096), nullable=False)
+
+class ExceptedIP(Base):
+    __tablename__ = "excepted_ip"
+
+    id = Column(Integer, primary_key=True)
+    ip = Column(String(128), nullable=False)

@@ -3,6 +3,7 @@
 import os
 import typer
 from typer._completion_shared import Shells
+import cli.excepted_ip
 import cli.node
 import cli.user
 
@@ -10,6 +11,7 @@ import cli.user
 app = typer.Typer(no_args_is_help=True, add_completion=False)
 app.add_typer(cli.user.app, name="user")
 app.add_typer(cli.node.app, name="node")
+app.add_typer(cli.excepted_ip.app, name="excepted_ip")
 
 # Hidden completion app
 app_completion = typer.Typer(
