@@ -27,7 +27,7 @@ class CheckService:
 
         user_limit = specify_user.limit if specify_user is not None else DEFAULT_LIMIT
 
-        if user_limit == 0:
+        if user_limit == 0 or excepted_ips.get(ExceptedIP.ip == user.ip):
             return
 
         self._storage.add_user(user)
@@ -66,10 +66,7 @@ class CheckService:
 
             self._in_process_ips.append(userByEmail.ip)
 
-            user_to_ban = userLast if BAN_LAST_USER else userByEmail
-            if excepted_ips.get(ExceptedIP.ip == user_to_ban.ip):
-                return
-            await self.ban_user(user_to_ban)
+            await self.ban_user(userLast if BAN_LAST_USER else userByEmail)
 
             self._in_process_ips.remove(userByEmail.ip)
 
