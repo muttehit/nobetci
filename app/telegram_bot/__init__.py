@@ -12,7 +12,7 @@ from telegram.ext import (
     CallbackQueryHandler
 )
 from app.config import TELEGRAM_API_TOKEN
-from app import user_limit_db
+from app import user_limit_db, storage
 from app.db.models import UserLimit
 from app.models.user import User
 from app.nobetnode import nodes
@@ -24,8 +24,9 @@ from app.utils.telegram import restricted
     GET_USER_NAME,
     UPDATE_USER_NAME,
     UPDATE_USER_LIMIT,
-    DELETE_USER_NAME
-) = range(6)
+    DELETE_USER_NAME,
+    ACTIVE_IPS_USER_NAME
+) = range(7)
 
 
 async def build_telegram_bot():
@@ -69,6 +70,16 @@ async def build_telegram_bot():
             states={
                 DELETE_USER_NAME: [MessageHandler(
                     filters.TEXT, delete_user_name)]
+            },
+            fallbacks=[CommandHandler("cancel", start)],
+        )
+    )
+    application.add_handler(
+        ConversationHandler(
+            entry_points=[CommandHandler("user_active_ips", active_ips)],
+            states={
+                ACTIVE_IPS_USER_NAME: [MessageHandler(
+                    filters.TEXT, active_ips_user_name)]
             },
             fallbacks=[CommandHandler("cancel", start)],
         )
@@ -264,6 +275,28 @@ async def delete_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -
     )
     return ConversationHandler.END
 
+
+@restricted
+async def active_ips(update: Update, _context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_html(
+        text="Send Your User Name:"
+    )
+    return ACTIVE_IPS_USER_NAME
+
+
+@restricted
+async def active_ips_user_name(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    context.user_data["name"] = update.message.text.strip()
+
+    userips = list(
+        map(lambda x: x.ip, storage.get_users(context.user_data["name"])))
+
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=f"User {context.user_data["name"]} IPs:\n{"\n".join(userips)}",
+    )
+    return ConversationHandler.END
+
 START_MESSAGE = """
 <b>Commands List:</b>
 <b>/start</b>
@@ -276,4 +309,6 @@ START_MESSAGE = """
 <code>Update User</code>
 <b>/delete_user</b>
 <code>Delete User</code>
+<b>/user_active_ips</b>
+<code>User Active IPs</code>
 """
