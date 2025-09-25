@@ -2,7 +2,7 @@ import logging
 
 from fastapi import APIRouter
 from fastapi.security import OAuth2PasswordBearer
-from app import user_limit_db
+from app import user_limit_db, storage
 
 from app.db import models
 from app.deps import SudoAdminDep
@@ -67,3 +67,10 @@ async def unbanByIp(username: str, ip: str, admin: SudoAdminDep):
         except Exception as err:
             logger.error(f'error (node: {node}): ', err)
     return {"success": True}
+
+
+@router.get("/{username}/active_ips")
+async def active_ips(username: str, admin: SudoAdminDep):
+    userips = list(map(lambda x: x.ip, storage.get_users(username)))
+
+    return {"success": True, "data": userips}
