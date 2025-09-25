@@ -309,4 +309,6 @@ START_MESSAGE = """
 <code>Update User</code>
 <b>/delete_user</b>
 <code>Delete User</code>
+<b>/user_active_ips</b>
+<code>User Active IPs</code>
 """
