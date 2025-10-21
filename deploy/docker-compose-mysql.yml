@@ -1,6 +1,6 @@
 services:
   nobetci:
-    image: ghcr.io/muttehitler/nobetci:latest
+    image: ghcr.io/muttehit/nobetci:latest
     container_name: nobetci
     restart: always
     env_file: .env
