@@ -13,7 +13,7 @@ SECRET_KEY=""
 API_USERNAME=""
 API_PASSWORD=""
 
-FETCH_REPO="muttehitler/nobetci"
+FETCH_REPO="muttehit/nobetci"
 SCRIPT_URL="https://github.com/$FETCH_REPO/raw/main/script.sh"
 
 colorized_echo() {
@@ -131,8 +131,8 @@ install_nobetci_script() {
 
 install_nobetci() {
     # Fetch releases
-    FILES_URL_PREFIX="https://raw.githubusercontent.com/muttehitler/nobetci/master"
-	COMPOSE_FILES_URL="https://raw.githubusercontent.com/muttehitler/nobetci/master/deploy"
+    FILES_URL_PREFIX="https://raw.githubusercontent.com/muttehit/nobetci/master"
+	COMPOSE_FILES_URL="https://raw.githubusercontent.com/muttehit/nobetci/master/deploy"
  	database=$1
   	nightly=$2
   
@@ -144,7 +144,7 @@ install_nobetci() {
     colorized_echo green "File saved in $CONFIG_DIR/docker-compose.yml"
 	if [ "$nightly" = true ]; then
 	    colorized_echo red "setting compose tag to nightly."
-	 	sed -ri "s/(ghcr.io\/muttehitler\/nobetci:)latest/\1nightly/g" $CONFIG_DIR/docker-compose.yml
+	 	sed -ri "s/(ghcr.io\/muttehit\/nobetci:)latest/\1nightly/g" $CONFIG_DIR/docker-compose.yml
 	fi
  
     colorized_echo blue "Fetching example .env file"
