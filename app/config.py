@@ -23,6 +23,9 @@ ACCEPTED = config("ACCEPTED", cast=bool, default=False)
 PANEL_USERNAME = config("PANEL_USERNAME", default="")
 PANEL_PASSWORD = config("PANEL_PASSWORD", default="")
 PANEL_ADDRESS = config("PANEL_ADDRESS", default="")
+PANEL_CUSTOM_NODES_ENV = config("PANEL_CUSTOM_NODES", default=None)
+PANEL_CUSTOM_NODES = PANEL_CUSTOM_NODES_ENV and [
+    x.strip() for x in PANEL_CUSTOM_NODES_ENV.split(",") if x.strip()] or None
 
 BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=10)
 STL = config("STL", cast=int, default=10)

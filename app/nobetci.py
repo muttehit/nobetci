@@ -17,7 +17,7 @@ from app.utils.panel import get_marznodes
 
 from . import __version__, user_limit_db, storage
 
-from app.config import (DEBUG, DOCS, PANEL_ADDRESS, PANEL_PASSWORD, PANEL_USERNAME,
+from app.config import (DEBUG, DOCS, PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_USERNAME,
                         UVICORN_HOST, UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE, UVICORN_UDS)
 from app.routes import api_router
 from app.tasks.nodes import nodes_startup
@@ -44,6 +44,9 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         storage, user_limit_db))
 
     marznodes = await get_marznodes(paneltype)
+
+    if PANEL_CUSTOM_NODES:
+        marznodes = [m for m in marznodes if m.name in PANEL_CUSTOM_NODES]
 
     for marznode in marznodes:
         asyncio.create_task(node_service.get_nodes_logs(paneltype, marznode))
