@@ -26,6 +26,7 @@ PANEL_ADDRESS = config("PANEL_ADDRESS", default="")
 PANEL_CUSTOM_NODES_ENV = config("PANEL_CUSTOM_NODES", default=None)
 PANEL_CUSTOM_NODES = PANEL_CUSTOM_NODES_ENV and [
     x.strip() for x in PANEL_CUSTOM_NODES_ENV.split(",") if x.strip()] or None
+PANEL_NODE_RESET = config("PANEL_NODE_RESET", cast=int, default=8192)
 
 BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=10)
 STL = config("STL", cast=int, default=10)
