@@ -1,12 +1,12 @@
 <p align="center">
     <a href="#">
-        <img src="https://img.shields.io/github/license/muttehitler/nobetci?style=flat-square" />
+        <img src="https://img.shields.io/github/license/muttehit/nobetci?style=flat-square" />
     </a>
     <a href="https://t.me/muttehitler" target="_blank">
         <img src="https://img.shields.io/badge/telegram-group-blue?style=flat-square&logo=telegram" />
     </a>
     <a href="#">
-        <img src="https://img.shields.io/github/stars/muttehitler/nobetci?style=social" />
+        <img src="https://img.shields.io/github/stars/muttehit/nobetci?style=social" />
     </a>
 </p>
 
@@ -22,11 +22,11 @@ Nöbetci checks the IPs of all marznode, and if an user IPs exceed the limit, fi
 
 ### Installation
 
-To install Nöbetci, see installation guide on [doc](https://muttehitler.github.io/nobetci-docs/docs/get-start/nobetci-installation/)
+To install Nöbetci, see installation guide on [doc](https://muttehit.github.io/nobetci-docs/docs/get-start/nobetci-installation/)
 
 ### Docs
 
-Nöbetci have a documentation on [here](https://muttehitler.github.io/nobetci-docs).
+Nöbetci have a documentation on [here](https://muttehit.github.io/nobetci-docs).
 
 ### Features
 
@@ -38,4 +38,4 @@ Nöbetci have a documentation on [here](https://muttehitler.github.io/nobetci-do
 
 ## Nöbetnode
 
-You must install [Nöbetnode](https://github.com/muttehitler/nobetnode) on all your proxy servers to ban IPs
+You must install [Nöbetnode](https://github.com/muttehit/nobetnode) on all your proxy servers to ban IPs
