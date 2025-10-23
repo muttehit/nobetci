@@ -1,7 +1,7 @@
 import logging
 import ssl
 from ssl import SSLError
-from app.config import PANEL_CUSTOM_NODES
+from app.config import PANEL_CUSTOM_NODES, PANEL_NODE_RESET
 from app.models.marznode import MarzNode
 from app.models.panel import Panel
 from app.models.user import User
@@ -74,7 +74,7 @@ class MarzNodeService:
     async def handle_cancel_all(self, tasks: list[asyncio.Task], panel_data: MarzNode) -> None:
         async with asyncio.TaskGroup() as tg:
             while True:
-                await asyncio.sleep(8192)  # =~ 2 hours and 27 minutes
+                await asyncio.sleep(PANEL_NODE_RESET)
                 for task in tasks:
                     logger.info(f"Cancelling {task.get_name()}...")
                     task.cancel()
