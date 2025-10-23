@@ -24,7 +24,7 @@ async def start_marznode_tasks():
     async with asyncio.TaskGroup() as tg:
         for marznode in marznodes:
             await node_service.create_node_task(paneltype, tg, marznode)
-            tg.create_task(
-                node_service.handle_cancel_all(TASKS, paneltype),
-                name="cancel_all",
-            )
+        tg.create_task(
+            node_service.handle_cancel_all(TASKS, paneltype),
+            name="cancel_all",
+        )
