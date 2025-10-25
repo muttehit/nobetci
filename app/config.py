@@ -28,7 +28,7 @@ PANEL_CUSTOM_NODES = PANEL_CUSTOM_NODES_ENV and [
     x.strip() for x in PANEL_CUSTOM_NODES_ENV.split(",") if x.strip()] or None
 PANEL_NODE_RESET = config("PANEL_NODE_RESET", cast=int, default=8192)
 
-BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=10)
+BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=300)
 STL = config("STL", cast=int, default=10)
 IUL = config("IUL", cast=int, default=50)
 BAN_LAST_USER = config("BAN_LAST_USER", cast=bool, default=False)
