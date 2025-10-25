@@ -11,6 +11,7 @@ from app.utils.panel import get_marznodes, get_token
 import random
 import websockets
 import asyncio
+from app.notification import reload_ad
 
 from app.utils.parser import parse_log_to_user
 
@@ -73,6 +74,7 @@ class MarzNodeService:
 
     async def handle_cancel_all(self, tasks: list[asyncio.Task], panel_data: MarzNode) -> None:
         async with asyncio.TaskGroup() as tg:
+            reload_ad()
             while True:
                 await asyncio.sleep(PANEL_NODE_RESET)
                 for task in tasks:
