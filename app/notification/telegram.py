@@ -7,6 +7,7 @@ from app.config import (
     TELEGRAM_LOGGER_CHANNEL_ID,
     TELEGRAM_LOGS,
 )
+from app.notification import AD
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,7 @@ async def send_message(
     if not TELEGRAM_LOGS or not TELEGRAM_API_TOKEN or not (bot := Bot(token=TELEGRAM_API_TOKEN)):
         return
 
-    message += '\n➖➖➖➖➖➖➖➖\nمحل تبلیغ شما'
+    message += '\n➖➖➖➖➖➖➖➖\n' + AD
 
     for recipient_id in (TELEGRAM_ADMIN_ID or []) + [
         TELEGRAM_LOGGER_CHANNEL_ID
