@@ -4,6 +4,7 @@ anyio==4.9.0
 betterproto==1.2.5
 certifi==2025.4.26
 cffi==1.17.1
+charset-normalizer==3.4.4
 click==8.2.1
 cryptography==45.0.3
 dotenv==0.9.9
@@ -39,6 +40,7 @@ python-dotenv==1.1.0
 python-jose==3.5.0
 python-multipart==0.0.20
 python-telegram-bot==22.2
+requests==2.32.5
 rich==14.0.0
 rsa==4.9.1
 setuptools==80.9.0
@@ -52,5 +54,6 @@ typer==0.16.0
 types-protobuf==6.30.2.20250516
 typing-inspection==0.4.1
 typing_extensions==4.14.0
+urllib3==2.5.0
 uvicorn==0.35.0
 websockets==15.0.1
