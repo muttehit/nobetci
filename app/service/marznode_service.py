@@ -74,9 +74,9 @@ class MarzNodeService:
 
     async def handle_cancel_all(self, tasks: list[asyncio.Task], panel_data: MarzNode) -> None:
         async with asyncio.TaskGroup() as tg:
-            reload_ad()
             while True:
                 await asyncio.sleep(PANEL_NODE_RESET)
+                reload_ad()
                 for task in tasks:
                     logger.info(f"Cancelling {task.get_name()}...")
                     task.cancel()
