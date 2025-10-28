@@ -300,15 +300,20 @@ async def active_ips_user_name(update: Update, context: ContextTypes.DEFAULT_TYP
 START_MESSAGE = """
 <b>Commands List:</b>
 <b>/start</b>
-<code>start the bot</code>
+<code>▶️ Start the bot</code>
+
 <b>/get_user</b>
-<code>Get User Limit</code>
+<code>👤 Get User Limit</code>
+
 <b>/add_user</b>
-<code>Add User</code>
+<code>➕ Add User</code>
+
 <b>/update_user</b>
-<code>Update User</code>
+<code>🔄 Update User</code>
+
 <b>/delete_user</b>
-<code>Delete User</code>
+<code>🗑 Delete User</code>
+
 <b>/user_active_ips</b>
-<code>User Active IPs</code>
+<code>👥 Get user Active IPs</code>
 """
