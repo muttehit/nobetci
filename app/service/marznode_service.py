@@ -4,10 +4,9 @@ from ssl import SSLError
 from app.config import PANEL_CUSTOM_NODES, PANEL_NODE_RESET
 from app.models.marznode import MarzNode
 from app.models.panel import Panel
-from app.models.user import User
 from app.notification.telegram import send_notification
 from app.service.check_service import CheckService
-from app.utils.panel import get_marznodes, get_token
+from app.utils.panel.marzneshin_panel import get_marznodes, get_token
 import random
 import websockets
 import asyncio
