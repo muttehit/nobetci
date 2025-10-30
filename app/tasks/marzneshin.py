@@ -3,7 +3,7 @@ from app.config import PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_
 from app.models.panel import Panel
 from app.service.check_service import CheckService
 from app.service.marznode_service import TASKS, MarzNodeService
-from app.utils.panel import get_marznodes
+from app.utils.panel.marzneshin_panel import get_marznodes
 from app import user_limit_db, storage
 
 async def start_marznode_tasks():

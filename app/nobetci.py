@@ -9,13 +9,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 
-from app.tasks.marznode import start_marznode_tasks
+from app.tasks.marzneshin import start_marznode_tasks
+from app.tasks.rebecca import start_rebecca_node_tasks
 from app.telegram_bot import build_telegram_bot
-from app.utils.panel import get_marznodes
 
 from . import __version__
 
-from app.config import (DEBUG, DOCS, PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_USERNAME,
+from app.config import (DEBUG, DOCS, PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_TYPE, PANEL_USERNAME,
                         UVICORN_HOST, UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE, UVICORN_UDS)
 from app.routes import api_router
 from app.tasks.nodes import nodes_startup
@@ -32,7 +32,10 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
 
     await nodes_startup()
 
-    asyncio.create_task(start_marznode_tasks())
+    if PANEL_TYPE == "marzneshin":
+        asyncio.create_task(start_marznode_tasks())
+    elif PANEL_TYPE == "rebecca":
+        asyncio.create_task(start_rebecca_node_tasks())
 
     yield
 
