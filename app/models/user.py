@@ -34,3 +34,7 @@ class AddUser(BaseModel):
 
 class UpdateUser(BaseModel):
     limit: int
+
+class BanUser(BaseModel):
+    name: str
+    ip: str

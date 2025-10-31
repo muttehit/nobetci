@@ -6,7 +6,7 @@ from app.models.user import User
 class NobetNodeBase(ABC):
 
     @abstractmethod
-    async def BanUser(self, user: User):
+    async def BanUser(self, user: User, duration=None):
         pass
 
     @abstractmethod

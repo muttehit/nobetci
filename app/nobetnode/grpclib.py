@@ -58,10 +58,10 @@ class NobetNodeGRPCLIB(NobetNodeBase):
         self.usage_coefficient = usage_coefficient
         atexit.register(self._channel.close)
 
-    async def BanUser(self, user: User):
+    async def BanUser(self, user: User, duration=None):
         response = await self._stub.BanUser(PB2_User(
             ip=user.ip,
-            banDuration=int(BAN_INTERVAL)
+            banDuration=duration and int(duration) or int(BAN_INTERVAL)
         ))
         logger.info(response)
 
