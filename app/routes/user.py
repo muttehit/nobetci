@@ -59,6 +59,27 @@ async def add_user(username: str, update_user: UpdateUser, admin: SudoAdminDep):
     return {"success": True}
 
 
+@router.post("/{username}/ban")
+async def unbanByIp(username: str, admin: SudoAdminDep):
+    for node in nodes.keys():
+        try:
+            for user in storage.get_users(username):
+                await nodes[node].BanUser(user)
+        except Exception as err:
+            logger.error(f'error (node: {node}): ', err)
+    return {"success": True}
+
+
+@router.post("/{username}/ban/{ip}")
+async def unbanByIp(username: str, ip: str, admin: SudoAdminDep):
+    for node in nodes.keys():
+        try:
+            await nodes[node].BanUser(User(name=username, status=None, ip=ip, count=0))
+        except Exception as err:
+            logger.error(f'error (node: {node}): ', err)
+    return {"success": True}
+
+
 @router.post("/{username}/unban/{ip}")
 async def unbanByIp(username: str, ip: str, admin: SudoAdminDep):
     for node in nodes.keys():
