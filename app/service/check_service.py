@@ -1,7 +1,9 @@
+import asyncio
+import inspect
 import logging
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from app.config import ACCEPTED, BAN_LAST_USER, DEFAULT_LIMIT, IUL, STL
+from app.config import ACCEPTED, BAN_LAST_USER, DB_REQUEST_LIMIT_ON_CHECKING, DEFAULT_LIMIT, IUL, STL
 from app.db.models import ExceptedIP, UserLimit
 from app.models.user import User
 from app.nobetnode import nodes
@@ -20,10 +22,16 @@ class CheckService:
         self._specify_limit_db = specify_limit_db
         self._in_process_ips = []
         self.repeated_out_of_limits = []
+        self.sem = asyncio.Semaphore(DB_REQUEST_LIMIT_ON_CHECKING)
 
     async def check(self, user: User):
-        specify_user = self._specify_limit_db.get(
-            UserLimit.name == user.name)
+
+        async with self.sem:
+            specify_user = self._specify_limit_db.get(
+                UserLimit.name == user.name)
+
+            if inspect.isawaitable(specify_user):
+                specify_user = await specify_user
 
         user_limit = specify_user.limit if specify_user is not None else DEFAULT_LIMIT
 

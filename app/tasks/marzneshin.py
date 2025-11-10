@@ -3,10 +3,15 @@ from app.config import PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_
 from app.models.panel import Panel
 from app.service.check_service import CheckService
 from app.service.marznode_service import TASKS, MarzNodeService
+from app.tasks.nodes import nodes_startup
 from app.utils.panel.marzneshin_panel import get_marznodes
 from app import user_limit_db, storage
+from app.db import node_db
+
 
 async def start_marznode_tasks():
+    await nodes_startup(node_db.get_all(True))
+
     paneltype = Panel(
         username=PANEL_USERNAME,
         password=PANEL_PASSWORD,

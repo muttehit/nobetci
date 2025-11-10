@@ -16,6 +16,9 @@ SQLALCHEMY_CONNECTION_POOL_SIZE = config(
 SQLALCHEMY_CONNECTION_MAX_OVERFLOW = config(
     "SQLALCHEMY_CONNECTION_MAX_OVERFLOW", default=-1, cast=int
 )
+DB_REQUEST_LIMIT_ON_CHECKING = config(
+    "DB_REQUEST_LIMIT_ON_CHECKING", default=30, cast=int
+)
 
 DEFAULT_LIMIT = config("DEFAULT_LIMIT", cast=int, default=0)
 ACCEPTED = config("ACCEPTED", cast=bool, default=False)
@@ -28,6 +31,7 @@ PANEL_CUSTOM_NODES = PANEL_CUSTOM_NODES_ENV and [
     x.strip() for x in PANEL_CUSTOM_NODES_ENV.split(",") if x.strip()] or None
 PANEL_NODE_RESET = config("PANEL_NODE_RESET", cast=int, default=8192)
 PANEL_TYPE = config("PANEL_TYPE", default="marzneshin")
+SYNC_WITH_PANEL = config("SYNC_WITH_PANEL", cast=bool, default=False)
 
 BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=300)
 STL = config("STL", cast=int, default=10)

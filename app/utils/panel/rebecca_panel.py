@@ -48,7 +48,7 @@ async def get_token(panel_data: Panel) -> Panel | ValueError:
     raise ValueError(message)
 
 
-async def get_rebecca_nodes(panel_data: Panel) -> list[RebeccaNode] | ValueError:
+async def get_rebecca_nodes(panel_data: Panel, sync: bool = False) -> list[RebeccaNode] | ValueError:
     for attempt in range(20):
         get_panel_token = await get_token(panel_data)
         if isinstance(get_panel_token, ValueError):
@@ -65,13 +65,14 @@ async def get_rebecca_nodes(panel_data: Panel) -> list[RebeccaNode] | ValueError
                     response = await client.get(url, headers=headers, timeout=10)
                     response.raise_for_status()
                 user_inform = response.json()
-                for node in [u for u in user_inform if u['status'] == 'connected']:
+                for node in [u for u in user_inform if u['status'] == 'connected' and (not sync or u['use_nobetci'])]:
                     all_nodes.append(
                         RebeccaNode(
                             id=node["id"],
                             name=node["name"],
                             address=node["address"],
                             port=node['port'],
+                            nobetci_port=node['nobetci_port'],
                             status=node["status"],
                             message=node["message"],
                         )
@@ -93,6 +94,43 @@ async def get_rebecca_nodes(panel_data: Panel) -> list[RebeccaNode] | ValueError
         await asyncio.sleep(random.randint(2, 5) * attempt)
     message = (
         "Failed to get nodes after 20 attempts. make sure the panel is running "
+        + "and the username and password are correct."
+    )
+    await send_notification(message)
+    logger.error(message)
+    raise ValueError(message)
+
+
+async def get_user(username: str, panel_data: Panel) -> list[RebeccaNode] | ValueError:
+    for attempt in range(20):
+        token = panel_data.token
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
+        for scheme in ["https", "http"]:
+            url = f"{scheme}://{panel_data.domain}/api/user/{username}"
+            try:
+                async with httpx.AsyncClient(verify=False) as client:
+                    response = await client.get(url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                user_inform = response.json()
+                return user_inform
+            except SSLError:
+                continue
+            except httpx.HTTPStatusError:
+                message = f"[{response.status_code}] {response.text}"
+                await send_notification(message)
+                logger.error(message)
+                continue
+            except Exception as error:
+                message = f"An unexpected error occurredd: {error}"
+                await send_notification(message)
+                logger.error(message)
+                print(message)
+                continue
+        await asyncio.sleep(random.randint(2, 5) * attempt)
+    message = (
+        "Failed to get user after 20 attempts. make sure the panel is running "
         + "and the username and password are correct."
     )
     await send_notification(message)

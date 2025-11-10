@@ -15,10 +15,9 @@ from app.telegram_bot import build_telegram_bot
 
 from . import __version__
 
-from app.config import (DEBUG, DOCS, PANEL_ADDRESS, PANEL_CUSTOM_NODES, PANEL_PASSWORD, PANEL_TYPE, PANEL_USERNAME,
+from app.config import (DEBUG, DOCS, PANEL_TYPE,
                         UVICORN_HOST, UVICORN_PORT, UVICORN_SSL_CERTFILE, UVICORN_SSL_KEYFILE, UVICORN_UDS)
 from app.routes import api_router
-from app.tasks.nodes import nodes_startup
 
 from fastapi.middleware.cors import CORSMiddleware
 from uvicorn import Config, Server
@@ -29,8 +28,6 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     asyncio.create_task(build_telegram_bot())
-
-    await nodes_startup()
 
     if PANEL_TYPE == "marzneshin":
         asyncio.create_task(start_marznode_tasks())
