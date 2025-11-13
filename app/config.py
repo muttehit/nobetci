@@ -17,8 +17,9 @@ SQLALCHEMY_CONNECTION_MAX_OVERFLOW = config(
     "SQLALCHEMY_CONNECTION_MAX_OVERFLOW", default=-1, cast=int
 )
 DB_REQUEST_LIMIT_ON_CHECKING = config(
-    "DB_REQUEST_LIMIT_ON_CHECKING", default=30, cast=int
+    "DB_REQUEST_LIMIT_ON_CHECKING", default=10, cast=int
 )
+CACHE_TTL = config("CACHE_TTL", default=300, cast=int)
 
 DEFAULT_LIMIT = config("DEFAULT_LIMIT", cast=int, default=0)
 ACCEPTED = config("ACCEPTED", cast=bool, default=False)
