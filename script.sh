@@ -9,6 +9,8 @@ ENV_FILE="$CONFIG_DIR/.env"
 PANEL_ADDRESS=""
 PANEL_USER=""
 PANEL_PASSWORD=""
+PANEL_TYPE=""
+SYNC_WITH_PANEL=False
 SECRET_KEY=""
 API_USERNAME=""
 API_PASSWORD=""
@@ -265,6 +267,55 @@ get_panel_password(){
     fi
 }
 
+get_panel_type() {
+    while true; do
+        read -p "Enter the panel type (marzneshin, rebecca): " PANEL_TYPE
+
+        case "$PANEL_TYPE" in
+            marzneshin|rebecca)
+                break ;;
+            *)
+                echo "Invalid panel type. Please enter either 'marzneshin' or 'rebecca'."
+                ;;
+        esac
+    done
+
+    if grep -q "^PANEL_TYPE=" "$ENV_FILE"; then
+        sed -i.bak "s|^PANEL_TYPE=.*|PANEL_TYPE=$PANEL_TYPE|" "$ENV_FILE"
+    else
+        echo "PANEL_TYPE=$PANEL_TYPE" >> "$ENV_FILE"
+    fi
+}
+
+get_panel_sync() {
+    while true; do
+        read -p "Are you want sync Nöbetci with panel?(only available on rebecca) (y/n): " ANSWER
+
+        case "$ANSWER" in
+            y|Y)
+                SYNC_WITH_PANEL="True"
+                break
+                ;;
+            n|N)
+                SYNC_WITH_PANEL="False"
+                break
+                ;;
+            *)
+                echo "Invalid input. Please enter y or n."
+                ;;
+        esac
+    done
+
+    if grep -q "^SYNC_WITH_PANEL=" "$ENV_FILE"; then
+        sed -i.bak "s|^SYNC_WITH_PANEL=.*|SYNC_WITH_PANEL=$SYNC_WITH_PANEL|" "$ENV_FILE"
+    else
+        echo "SYNC_WITH_PANEL=$SYNC_WITH_PANEL" >> "$ENV_FILE"
+    fi
+
+    echo "SYNC_WITH_PANEL set to $SYNC_WITH_PANEL"
+}
+
+
 install_command() {
     check_running_as_root
     # Check if nobetci is already installed
@@ -318,6 +369,8 @@ install_command() {
     get_panel_address
     get_panel_user
     get_panel_password
+    get_panel_type
+    get_panel_sync
     
     up_nobetci
     follow_nobetci_logs
