@@ -315,6 +315,31 @@ get_panel_sync() {
     echo "SYNC_WITH_PANEL set to $SYNC_WITH_PANEL"
 }
 
+set_default_limit() {
+    local new_limit="$1"
+
+    if [ -z "$new_limit" ]; then
+        echo "Error: No limit value provided to set_default_limit."
+        echo "Usage: set_default_limit <NUMBER>"
+        return 1
+    fi
+
+    if ! [[ "$new_limit" =~ ^[0-9]+$ ]]; then
+        echo "Error: Limit value '$new_limit' is not a valid number."
+        return 1
+    fi
+
+
+    if grep -q "^DEFALUT_LIMIT=" "$ENV_FILE"; then
+        sed -i.bak "s|^DEFALUT_LIMIT=.*|DEFALUT_LIMIT=$new_limit|" "$ENV_FILE"
+        echo "Updated existing DEFALUT_LIMIT in $ENV_FILE"
+    else
+        echo "DEFALUT_LIMIT=$new_limit" >> "$ENV_FILE"
+        echo "Added new DEFALUT_LIMIT to $ENV_FILE"
+    fi
+
+    echo "DEFALUT_LIMIT set to $new_limit"
+}
 
 install_command() {
     check_running_as_root
@@ -373,6 +398,7 @@ install_command() {
     
     if [ "$PANEL_TYPE" = "rebecca" ]; then
         get_panel_sync
+        set_default_limit 0
     fi
     
     up_nobetci
