@@ -330,15 +330,15 @@ set_default_limit() {
     fi
 
 
-    if grep -q "^DEFAUlT_LIMIT=" "$ENV_FILE"; then
-        sed -i.bak "s|^DEFAUlT_LIMIT=.*|DEFAUlT_LIMIT=$new_limit|" "$ENV_FILE"
-        echo "Updated existing DEFAUlT_LIMIT in $ENV_FILE"
+    if grep -q "^DEFAULT_LIMIT=" "$ENV_FILE"; then
+        sed -i.bak "s|^DEFAULT_LIMIT=.*|DEFAULT_LIMIT=$new_limit|" "$ENV_FILE"
+        echo "Updated existing DEFAULT_LIMIT in $ENV_FILE"
     else
-        echo "DEFAUlT_LIMIT=$new_limit" >> "$ENV_FILE"
-        echo "Added new DEFAUlT_LIMIT to $ENV_FILE"
+        echo "DEFAULT_LIMIT=$new_limit" >> "$ENV_FILE"
+        echo "Added new DEFAULT_LIMIT to $ENV_FILE"
     fi
 
-    echo "DEFAUlT_LIMIT set to $new_limit"
+    echo "DEFAULT_LIMIT set to $new_limit"
 }
 
 install_command() {
