@@ -269,13 +269,13 @@ get_panel_password(){
 
 get_panel_type() {
     while true; do
-        read -p "Enter the panel type (marzneshin, rebecca): " PANEL_TYPE
+        read -p "Enter the panel type (marzneshin, rebecca, marzban): " PANEL_TYPE
 
         case "$PANEL_TYPE" in
-            marzneshin|rebecca)
+            marzneshin|rebecca|marzban)
                 break ;;
             *)
-                echo "Invalid panel type. Please enter either 'marzneshin' or 'rebecca'."
+                echo "Invalid panel type. Please enter either 'marzneshin' or 'rebecca' or 'marzban'."
                 ;;
         esac
     done
@@ -370,7 +370,10 @@ install_command() {
     get_panel_user
     get_panel_password
     get_panel_type
-    get_panel_sync
+    
+    if [ "$PANEL_TYPE" = "rebecca" ]; then
+        get_panel_sync
+    fi
     
     up_nobetci
     follow_nobetci_logs
