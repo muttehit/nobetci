@@ -9,6 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordBearer
 
+from app.tasks.marzban import start_marzban_node_tasks
 from app.tasks.marzneshin import start_marznode_tasks
 from app.tasks.rebecca import start_rebecca_node_tasks
 from app.telegram_bot import build_telegram_bot
@@ -33,6 +34,8 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         asyncio.create_task(start_marznode_tasks())
     elif PANEL_TYPE == "rebecca":
         asyncio.create_task(start_rebecca_node_tasks())
+    elif PANEL_TYPE == "marzban":
+        asyncio.create_task(start_marzban_node_tasks())
 
     yield
 
