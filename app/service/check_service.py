@@ -38,23 +38,23 @@ class CheckService:
         if user_limit == 0 or excepted_ips.get(ExceptedIP.ip == user.ip):
             return
 
-        self._storage.add_user(user)
+        await asyncio.to_thread(self._storage.add_user,user)
 
-        users = self._storage.get_users(user.name)
+        users = await asyncio.to_thread(self._storage.get_users,user.name)
 
         if len(users) > user_limit and user.ip not in self._in_process_ips:
-            userByEmail = self._storage.get_user(user.name)
-            userLast = self._storage.get_last_user(user.name)
+            userByEmail = await asyncio.to_thread(self._storage.get_user,user.name)
+            userLast = await asyncio.to_thread(self._storage.get_last_user,user.name)
 
             if userByEmail is None:
                 return
 
             self.repeated_out_of_limits.append(user)
 
-            rl_len = len(list(filter(lambda x: x.name == userByEmail.name and x.ip ==
-                                     userByEmail.ip, self.repeated_out_of_limits)))
-            rl_last_len = len(list(filter(
-                lambda x: x.name == userLast.name and x.ip == userLast.ip, self.repeated_out_of_limits)))
+            rl_len = userByEmail and len(list(filter(lambda x: x.name == userByEmail.name and x.ip ==
+                                     userByEmail.ip, self.repeated_out_of_limits))) or 0
+            rl_last_len = userLast and len(list(filter(
+                lambda x: x.name == userLast.name and x.ip == userLast.ip, self.repeated_out_of_limits))) or 0
 
             logger.debug(f"rl length: {rl_len}")
             logger.debug(f"rl last length: {rl_last_len}")

@@ -97,3 +97,44 @@ async def get_marznodes(panel_data: Panel) -> list[MarzNode] | ValueError:
     logger.error(message)
     raise ValueError(message)
 
+
+async def get_user_ip_limit(panel_data: Panel, username: str) -> int | ValueError:
+    for attempt in range(20):
+        get_panel_token = await get_token(panel_data)
+        if isinstance(get_panel_token, ValueError):
+            raise get_panel_token
+        token = get_panel_token.token
+        headers = {
+            "Authorization": f"Bearer {token}",
+        }
+        all_nodes = []
+        for scheme in ["https","http"]:
+            url = f"{scheme}://{panel_data.domain}/api/users/{username}/ip-limit"
+            try:
+                async with httpx.AsyncClient(verify=False) as client:
+                    response = await client.get(url, headers=headers, timeout=10)
+                    response.raise_for_status()
+                user_inform = response.json()
+                return user_inform['ip_limit']
+            except SSLError:
+                continue
+            except httpx.HTTPStatusError:
+                message = f"[{response.status_code}] {response.text}"
+                await send_notification(message)
+                logger.error(message)
+                continue
+            except Exception as error:
+                message = f"An unexpected error occurred: {error}"
+                await send_notification(message)
+                logger.error(message)
+                print(message)
+                continue
+        await asyncio.sleep(random.randint(2, 5) * attempt)
+    message = (
+        "Failed to get nodes after 20 attempts. make sure the panel is running "
+        + "and the username and password are correct."
+    )
+    await send_notification(message)
+    logger.error(message)
+    raise ValueError(message)
+

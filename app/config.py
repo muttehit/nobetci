@@ -39,6 +39,12 @@ STL = config("STL", cast=int, default=10)
 IUL = config("IUL", cast=int, default=50)
 BAN_LAST_USER = config("BAN_LAST_USER", cast=bool, default=False)
 
+REDIS = config("REDIS", cast=bool, default=False)
+REDIS_HOST = config("REDIS_HOST", default="localhost")
+REDIS_PORT = config("REDIS_PORT", cast=int, default=6379)
+REDIS_USERNAME = config("REDIS_USERNAME", default=None)
+REDIS_PASSWORD = config("REDIS_PASSWORD", default=None)
+
 API_USERNAME = config("API_USERNAME", default=None)
 API_PASSWORD = config("API_PASSWORD", default=None)
 
