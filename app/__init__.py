@@ -1,7 +1,7 @@
 import logging
 
 import uvicorn
-from app.config import DEBUG, REDIS
+from app.config import DEBUG, REDIS, STATUS_STORAGE
 from app.db.db_context import DbContext
 from app.db.models import UserLimit
 from app.storage.memory import MemoryStorage
@@ -10,7 +10,7 @@ from app.storage.redis import RedisStorage
 
 __version__ = "0.0.9"
 
-storage = REDIS and RedisStorage() or MemoryStorage()
+storage = STATUS_STORAGE == "redis" and REDIS and RedisStorage() or MemoryStorage()
 user_limit_db = DbContext(UserLimit)
 
 logger = logging.getLogger(__name__)

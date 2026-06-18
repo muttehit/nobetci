@@ -22,6 +22,7 @@ DB_REQUEST_LIMIT_ON_CHECKING = config(
 CACHE_TTL = config("CACHE_TTL", default=300, cast=int)
 
 DEFAULT_LIMIT = config("DEFAULT_LIMIT", cast=int, default=0)
+STATUS_STORAGE = config("STATUS_STORAGE", default="local")
 ACCEPTED = config("ACCEPTED", cast=bool, default=False)
 
 PANEL_USERNAME = config("PANEL_USERNAME", default="")
