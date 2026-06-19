@@ -1,5 +1,6 @@
 import json
 
+from app.config import USER_TTL
 from app.db import redis
 from app.models.user import User
 from .base import BaseStorage
@@ -11,7 +12,7 @@ class RedisStorage(BaseStorage):
         self.redis = redis
 
     def add_user(self, user: User):
-        self.redis.set(f'user:{user.name}:ip:{user.ip}', json.dumps({"node":user.node,"inbound":user.inbound,"accepted":user.accepted}), 120)
+        self.redis.set(f'user:{user.name}:ip:{user.ip}', json.dumps({"node":user.node,"inbound":user.inbound,"accepted":user.accepted}), USER_TTL)
     
     def get_user(self,username:str):
         keys = list(self.redis.scan_iter(f'user:{username}:ip:*'))

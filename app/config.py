@@ -39,6 +39,7 @@ BAN_INTERVAL = config("BAN_INTERVAL", cast=int, default=300)
 STL = config("STL", cast=int, default=10)
 IUL = config("IUL", cast=int, default=50)
 BAN_LAST_USER = config("BAN_LAST_USER", cast=bool, default=False)
+USER_TTL = config("USER_TTL", cast=int, default=120)
 
 REDIS = config("REDIS", cast=bool, default=False)
 REDIS_HOST = config("REDIS_HOST", default="localhost")
